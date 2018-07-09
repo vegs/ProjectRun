@@ -8,7 +8,10 @@ public class test_PlayerBehaviour : MonoBehaviour {
 
     void Update()
     {
-        InputMovement();
+        if(this.GetComponent<PhotonView>().isMine){
+            InputMovement();
+        
+        }
     }
 
     void InputMovement()
