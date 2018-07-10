@@ -65,7 +65,7 @@ public class ConnectAndJoinRandom : Photon.MonoBehaviour
 
     public void OnJoinedRoom()
     {
-        PhotonNetwork.Instantiate(player.name, new Vector3(0, -0.55f, -1.77f), Quaternion.identity, 0);
+        PhotonNetwork.Instantiate(player.name, new Vector3(0, 0.5f, -3f), Quaternion.identity, 0);
         Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room. From here on, your game would be running. For reference, all callbacks are listed in enum: PhotonNetworkingMessage");
     }
 }
