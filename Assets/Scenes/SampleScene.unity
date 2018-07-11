@@ -279,7 +279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4900ccf71408cc4fadb95f2f68ac60a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSection: {fileID: 1458785537105080, guid: 55aa780979d925545bfe91ef6a11b9d1, type: 2}
+  mapSection: {fileID: 1458785537105080, guid: 85581f9890d18b94db513de702643b2d, type: 2}
   speed: 10
   nCurrentSections: 5
 --- !u!4 &1779209724
@@ -307,5 +307,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoConnect: 1
-  player: {fileID: 1627748746661210, guid: 31f96ba0471e560408ada36b8171dfc9, type: 2}
+  player: {fileID: 114591093249057944, guid: 31f96ba0471e560408ada36b8171dfc9, type: 2}
   Version: 

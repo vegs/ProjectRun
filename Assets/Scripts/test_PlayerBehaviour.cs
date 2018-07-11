@@ -12,6 +12,8 @@ public class test_PlayerBehaviour : MonoBehaviour {
             InputMovement();
         
         }
+
+
     }
 
     void InputMovement()
@@ -27,6 +29,19 @@ public class test_PlayerBehaviour : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.A))
             this.transform.position -= Vector3.right * speed * Time.deltaTime;
-        
+
+
+
+        if (Input.GetKey(KeyCode.Q))
+        {
+            this.GetComponent<Player>().currentLane++;
+            this.GetComponent<Player>().GrabMapSectionEmpties();
+        }
+
+        if (Input.GetKey(KeyCode.E))
+        {
+            this.GetComponent<Player>().currentLane--;
+            this.GetComponent<Player>().GrabMapSectionEmpties();
+        }
     }
 }
