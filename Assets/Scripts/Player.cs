@@ -2,66 +2,125 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : Character {
+public class Player : MonoBehaviour {
 
-    public int currentLane = 2;
+    private bool moving = false;
+    private int currentLane = 2;
     public GameObject currentMapSection;
-    public List<GameObject> currentLaneEmpties = new List<GameObject>();
+    public List<GameObject> currentLaneWaypoints = new List<GameObject>();
+    private MapGenerator mapGen;
 
-    private int currentEmptyInt = 1; // keeps track of which empty within the map-section for player to aim for
+    public int id;
+    public string characterName;
+    private GameObject characterPrefab;
+    public float speed = 2f;
+
+    private GameObject nextWaypoint; // keeps track of which empty within the map-section for player to aim for
+    private GameObject previousWaypoint; // keeps track of which empty within the map-section for player to aim for
 
     void Start()
     {
-   
+        setCharacter(this.gameObject);
 
+        mapGen = GameObject.Find("Scripts").GetComponent<MapGenerator>();
+
+        setCurrentMapSection(mapGen.getFirstSection());
+
+        StartPlayerMove();
     }
 
-    public void Spawn()
+    void Update()
     {
-        //Debug.Log("test1: " + character.name);
-        PhotonNetwork.Instantiate(getPrefab().name, new Vector3(0, 0.5f, -3f), Quaternion.identity, 0);
-    }
-
-    private void Update()
-    {
-        if(this.transform.position.z > currentLaneEmpties[currentEmptyInt].transform.position.z)
+        if (moving)
         {
-            setEmptyPair();
+            checkNewDirection();
         }
 
-        this.transform.position =
-            currentLaneEmpties[currentEmptyInt - 1].transform.position
-            + (this.transform.position - currentLaneEmpties[currentEmptyInt].transform.position).magnitude
-            / (currentLaneEmpties[currentEmptyInt].transform.position - currentLaneEmpties[currentEmptyInt - 1].transform.position).magnitude
-            * (currentLaneEmpties[currentEmptyInt].transform.position - currentLaneEmpties[currentEmptyInt - 1].transform.position).normalized;
 
 
 
+    }
 
+    void checkNewDirection()
+    {
+        setEmptyPair();
+
+        //if (this.transform.position.z > currentLaneEmpties[currentEmptyInt].transform.position.z)
+        //{
+        //    setEmptyPair();
+
+        //    this.transform.position =
+        //    currentLaneEmpties[currentEmptyInt - 1].transform.position
+        //    + (this.transform.position - currentLaneEmpties[currentEmptyInt].transform.position).magnitude
+        //    / (currentLaneEmpties[currentEmptyInt].transform.position - currentLaneEmpties[currentEmptyInt - 1].transform.position).magnitude
+        //    * (currentLaneEmpties[currentEmptyInt].transform.position - currentLaneEmpties[currentEmptyInt - 1].transform.position).normalized;
+        //}
     }
 
     private void setEmptyPair()
     {
-        for(int i = 1; i < currentLaneEmpties.Count-1; i++)
+        for (int i=1; i<currentLaneWaypoints.Count; i++) //the line the error is pointing to
         {
-            if(this.transform.position.z < currentLaneEmpties[i].transform.position.z)
+            GameObject waypoint = currentLaneWaypoints[i];
+            if (GetComponent<Transform>().position.z < waypoint.GetComponent<Transform>().position.z)
             {
-                currentEmptyInt = i;
+                nextWaypoint = waypoint;
+                previousWaypoint = currentLaneWaypoints[i-1];
                 return;
             }
         }
 
         // player has ran past the last empty on map-section.
-        currentMapSection = currentMapSection.GetComponent<MapSection_behaviour>().nextMapSection;
-        currentEmptyInt = 1;
+        //setCurrentMapSection(currentMapSection.GetComponent<MapSection_behaviour>().getNextMapSection());
+    }
+
+    public void StartPlayerMove ()
+    {
+        updateCurrentLaneWaypoints();
+        moving = true;
+
     }
 
 
-
-
-
-    public void GrabMapSectionEmpties()
+    public void updateCurrentLaneWaypoints()
     {
-        currentLaneEmpties = currentMapSection.GetComponent<MapSection_behaviour>().LaneEmpties(currentLane);
+        currentLaneWaypoints = currentMapSection.GetComponent<MapSection_behaviour>().LaneEmpties(currentLane);
+    }
+
+    public void setCurrentMapSection(GameObject mapSection)
+    {
+        currentMapSection = mapSection;
+        updateCurrentLaneWaypoints();
+        nextWaypoint = currentLaneWaypoints[1];;
+        previousWaypoint = currentLaneWaypoints[0];
+
+    }
+
+    public GameObject getCurrentMapSection()
+    {
+        return currentMapSection;
+    }
+
+    public void setCurrentLane(int lane)
+    {
+        currentLane = lane;
+        updateCurrentLaneWaypoints();
+
+    }
+
+    public int getCurrentLane()
+    {
+        return currentLane;
+    }
+
+
+    public void setCharacter(GameObject character)
+    {
+        characterPrefab = character;
+    }
+
+    public GameObject getPrefab()
+    {
+        return characterPrefab;
     }
 }

@@ -24,8 +24,7 @@ GameObject:
   - component: {fileID: 65827685201322570}
   - component: {fileID: 114586453073924080}
   - component: {fileID: 114070902239675786}
-  - component: {fileID: 114924214677333756}
-  - component: {fileID: 114591093249057944}
+  - component: {fileID: 114995341212509952}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -139,7 +138,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1
---- !u!114 &114591093249057944
+--- !u!114 &114995341212509952
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -150,22 +149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32d2a1d09a681e04eafc4b8455e7b961, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentMapSection: {fileID: 0}
+  currentLaneEmpties: []
   id: 0
   characterName: 
   speed: 2
-  currentLane: 0
---- !u!114 &114924214677333756
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1627748746661210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83c8d948b6988df4d8d304642b534510, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 0
-  characterName: 
-  speed: 2
-  currentLane: 0

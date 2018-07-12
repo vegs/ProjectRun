@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    public int id;
     public string characterName;
     private GameObject characterPrefab;
     public float speed = 2f;
@@ -12,7 +11,7 @@ public class Character : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -21,13 +20,5 @@ public class Character : MonoBehaviour
         //this.transform.position -= Vector3.forward * speed * Time.deltaTime;
     }
 
-    public void setCharacter(GameObject character)
-    {
-        characterPrefab = character;
-    }
 
-    public GameObject getPrefab()
-    {
-        return characterPrefab;
-    }
 }

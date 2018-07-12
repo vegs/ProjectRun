@@ -264,7 +264,7 @@ GameObject:
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -282,6 +282,7 @@ MonoBehaviour:
   mapSection: {fileID: 1458785537105080, guid: 85581f9890d18b94db513de702643b2d, type: 2}
   speed: 10
   nCurrentSections: 5
+  activeMapSections: []
 --- !u!4 &1779209724
 Transform:
   m_ObjectHideFlags: 0
@@ -307,5 +308,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoConnect: 1
-  player: {fileID: 114591093249057944, guid: 31f96ba0471e560408ada36b8171dfc9, type: 2}
+  player: {fileID: 114995341212509952, guid: 31f96ba0471e560408ada36b8171dfc9, type: 2}
   Version: 

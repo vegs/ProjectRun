@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DefaultCharacter : Player
+public class DefaultCharacter : Character
 {
 
     // Use this for initialization
@@ -11,7 +11,9 @@ public class DefaultCharacter : Player
         this.characterName = "Cube";
 
         
-        setCharacter(this.gameObject);
+        //setCharacter(this.gameObject);
+
+
 
         //setCharacter(GameObject.FindGameObjectWithTag(this.characterName));
     }
@@ -19,6 +21,7 @@ public class DefaultCharacter : Player
     // Update is called once per frame
     void Update()
     {
+
         //this.transform.position -= Vector3.forward * speed * Time.deltaTime;
     }
 }

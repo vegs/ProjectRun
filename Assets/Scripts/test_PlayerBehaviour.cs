@@ -18,6 +18,8 @@ public class test_PlayerBehaviour : MonoBehaviour {
 
     void InputMovement()
     {
+        Player player = this.GetComponent<Player>();
+
         if (Input.GetKey(KeyCode.W))
             this.transform.position += Vector3.forward * speed * Time.deltaTime;
 
@@ -34,14 +36,12 @@ public class test_PlayerBehaviour : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.Q))
         {
-            this.GetComponent<Player>().currentLane++;
-            this.GetComponent<Player>().GrabMapSectionEmpties();
+            player.setCurrentLane(player.getCurrentLane() + 1);
         }
 
         if (Input.GetKey(KeyCode.E))
         {
-            this.GetComponent<Player>().currentLane--;
-            this.GetComponent<Player>().GrabMapSectionEmpties();
+            player.setCurrentLane(player.getCurrentLane() - 1);
         }
     }
 }

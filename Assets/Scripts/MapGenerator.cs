@@ -7,12 +7,12 @@ public class MapGenerator : Photon.MonoBehaviour {
     public GameObject mapSection;
     public float speed = 10f;
     public int nCurrentSections = 5;
-    private List<GameObject> activeMapSections = new List<GameObject>();
+    public List<GameObject> activeMapSections = new List<GameObject>();
     private bool initiated = false;
     private List<GameObject> mapOrder= new List<GameObject>();
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
         initiateMap();
 	}
 	
@@ -53,7 +53,7 @@ public class MapGenerator : Photon.MonoBehaviour {
         //activeMapSections.Add(Instantiate(mapSection, new Vector3(lastSection.transform.position.x, lastSection.transform.position.y, lastSection.transform.position.z+5f), Quaternion.identity));
         GameObject a = (GameObject)Instantiate(mapSection, new Vector3(lastSection.transform.position.x, lastSection.transform.position.y, lastSection.transform.position.z + 5f), Quaternion.identity);
 
-        lastSection.GetComponent<MapSection_behaviour>().nextMapSection = a;
+        lastSection.GetComponent<MapSection_behaviour>().setNextMapSection(a);
 
         activeMapSections.Add(a);
         Debug.Log(activeMapSections);
@@ -67,7 +67,17 @@ public class MapGenerator : Photon.MonoBehaviour {
     }
     public GameObject getFirstSection()
     {
-        return activeMapSections[0];
+        if (initiated)
+        {
+            GameObject firstSection = (GameObject)activeMapSections[0];
+            return firstSection;
+        }
+        else
+        {
+            Debug.Log("FAIL");
+            return null;
+        }
+
        
     }
 

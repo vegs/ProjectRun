@@ -31,6 +31,16 @@ public class MapSection_behaviour : MonoBehaviour {
         }
     }
 
+    public void setNextMapSection(GameObject mapSection)
+    {
+        nextMapSection = mapSection;
+    }
+
+    public GameObject getNextMapSection()
+    {
+        return nextMapSection;
+    }
+
 
 
     //public List<GameObject> Lane1Empties()

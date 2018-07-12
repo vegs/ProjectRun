@@ -343,10 +343,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08674f61bc8d30443ab2c9c6639407fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lane_1: []
-  lane_2: []
-  lane_3: []
-  lane_4: []
+  lane_1:
+  - {fileID: 1626690854522060}
+  - {fileID: 1227599904398234}
+  lane_2:
+  - {fileID: 1727735119021170}
+  - {fileID: 1593018695881192}
+  lane_3:
+  - {fileID: 1229315850492106}
+  - {fileID: 1998518846909468}
+  lane_4:
+  - {fileID: 1893345060140240}
+  - {fileID: 1573552939612048}
+  nextMapSection: {fileID: 0}
 --- !u!114 &114994972031605300
 MonoBehaviour:
   m_ObjectHideFlags: 1
