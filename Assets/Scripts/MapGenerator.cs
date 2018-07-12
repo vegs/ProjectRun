@@ -63,7 +63,7 @@ public class MapGenerator : Photon.MonoBehaviour {
     {
         GameObject firstSection = activeMapSections[0];
         activeMapSections.Remove(firstSection);
-        Destroy(firstSection);
+        //Destroy(firstSection);
     }
     public GameObject getFirstSection()
     {

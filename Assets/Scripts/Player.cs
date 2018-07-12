@@ -14,9 +14,13 @@ public class Player : MonoBehaviour {
     public string characterName;
     private GameObject characterPrefab;
     public float speed = 2f;
+    public float switchLaneSpeed = 5f;
 
     private GameObject nextWaypoint; // keeps track of which empty within the map-section for player to aim for
     private GameObject previousWaypoint; // keeps track of which empty within the map-section for player to aim for
+
+    public Vector3 mapDirection;
+    public float targetPositionX;
 
     void Start()
     {
@@ -45,16 +49,39 @@ public class Player : MonoBehaviour {
     {
         setEmptyPair();
 
-        //if (this.transform.position.z > currentLaneEmpties[currentEmptyInt].transform.position.z)
-        //{
-        //    setEmptyPair();
+        SetDirection();
 
-        //    this.transform.position =
-        //    currentLaneEmpties[currentEmptyInt - 1].transform.position
-        //    + (this.transform.position - currentLaneEmpties[currentEmptyInt].transform.position).magnitude
-        //    / (currentLaneEmpties[currentEmptyInt].transform.position - currentLaneEmpties[currentEmptyInt - 1].transform.position).magnitude
-        //    * (currentLaneEmpties[currentEmptyInt].transform.position - currentLaneEmpties[currentEmptyInt - 1].transform.position).normalized;
+        SetTargetPosition();
+
+        moveTowardsTarget();
+    }
+
+    public void SetDirection()
+    {
+        mapDirection = (nextWaypoint.transform.position - previousWaypoint.transform.position).normalized;
+    }
+
+    public void SetTargetPosition()
+    {
+        Vector2 dirXZ = new Vector2(mapDirection.x, mapDirection.z);
+
+        //targetPositionX = ((this.transform.position.z - previousWaypoint.transform.position.z) / (Vector2.Dot(Vector2.right,dirXZ))) + previousWaypoint.transform.position.x;
+        targetPositionX = nextWaypoint.transform.position.x;
+
+    }
+
+    public void moveTowardsTarget()
+    {
+        //if (this.transform.position.x < targetPositionX)
+        //{
+        //    this.transform.position += Vector3.right * switchLaneSpeed * Time.deltaTime;
         //}
+        //else if (this.transform.position.x > targetPositionX)
+        //{
+        //    this.transform.position += Vector3.left * switchLaneSpeed * Time.deltaTime;
+        //}
+        this.transform.position = new Vector3(targetPositionX, this.transform.position.y, this.transform.position.z);
+
     }
 
     private void setEmptyPair()
@@ -62,7 +89,7 @@ public class Player : MonoBehaviour {
         for (int i=1; i<currentLaneWaypoints.Count; i++) //the line the error is pointing to
         {
             GameObject waypoint = currentLaneWaypoints[i];
-            if (GetComponent<Transform>().position.z < waypoint.GetComponent<Transform>().position.z)
+            if (this.transform.position.z < waypoint.transform.position.z)
             {
                 nextWaypoint = waypoint;
                 previousWaypoint = currentLaneWaypoints[i-1];
@@ -70,8 +97,9 @@ public class Player : MonoBehaviour {
             }
         }
 
+
         // player has ran past the last empty on map-section.
-        //setCurrentMapSection(currentMapSection.GetComponent<MapSection_behaviour>().getNextMapSection());
+        setCurrentMapSection(currentMapSection.GetComponent<MapSection_behaviour>().getNextMapSection());
     }
 
     public void StartPlayerMove ()
@@ -106,6 +134,21 @@ public class Player : MonoBehaviour {
         currentLane = lane;
         updateCurrentLaneWaypoints();
 
+    }
+
+    public void switchLaneRight()
+    {
+        if (currentMapSection.GetComponent<MapSection_behaviour>().numberOfLanes > currentLane)
+        {
+            setCurrentLane(currentLane + 1);
+        }
+    }
+    public void switchLaneLeft()
+    {
+        if (currentMapSection.GetComponent<MapSection_behaviour>().numberOfLanes > currentLane)
+        {
+            setCurrentLane(currentLane - 1);
+        }
     }
 
     public int getCurrentLane()

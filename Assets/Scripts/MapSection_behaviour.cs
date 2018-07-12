@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class MapSection_behaviour : MonoBehaviour {
 
+    public List<GameObject>[] lanes;
     public List<GameObject> lane_1 = new List<GameObject>();
     public List<GameObject> lane_2 = new List<GameObject>();
     public List<GameObject> lane_3 = new List<GameObject>();
     public List<GameObject> lane_4 = new List<GameObject>();
 
     public GameObject nextMapSection;
+    public int numberOfLanes = 4;
 
 
     public List<GameObject> LaneEmpties(int laneNo)

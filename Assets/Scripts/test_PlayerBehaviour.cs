@@ -36,12 +36,15 @@ public class test_PlayerBehaviour : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.Q))
         {
-            player.setCurrentLane(player.getCurrentLane() + 1);
+            //player.setCurrentLane(player.getCurrentLane() + 1);
+            player.switchLaneLeft();
         }
 
         if (Input.GetKey(KeyCode.E))
         {
-            player.setCurrentLane(player.getCurrentLane() - 1);
+            //player.setCurrentLane(player.getCurrentLane() - 1);
+            player.switchLaneRight();
+
         }
     }
 }
