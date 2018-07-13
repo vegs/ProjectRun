@@ -149,8 +149,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32d2a1d09a681e04eafc4b8455e7b961, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentLane: 0
   currentMapSection: {fileID: 0}
-  currentLaneEmpties: []
+  mapSection: {fileID: 0}
+  currentLaneWaypoints: []
   id: 0
   characterName: 
   speed: 2
+  switchLaneSpeed: 13
+  mapDirection: {x: 0, y: 0, z: 0}
+  targetPositionX: 0

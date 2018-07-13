@@ -5,46 +5,44 @@ using UnityEngine;
 public class test_PlayerBehaviour : MonoBehaviour {
 
     public float speed = 1f;
+    private Player player;
+    private PhotonView photonView;
 
+    void Start()
+    {
+        player = this.GetComponent<Player>();
+        photonView = this.GetComponent<PhotonView>();
+    }
     void Update()
     {
-        if(this.GetComponent<PhotonView>().isMine){
+        if(photonView.isMine){
             InputMovement();
-        
         }
-
-
     }
 
     void InputMovement()
     {
-        Player player = this.GetComponent<Player>();
-
-        if (Input.GetKey(KeyCode.W))
-            this.transform.position += Vector3.forward * speed * Time.deltaTime;
-
-        if (Input.GetKey(KeyCode.S))
-            this.transform.position -= Vector3.forward * speed * Time.deltaTime;
-
-        if (Input.GetKey(KeyCode.D))
-            this.transform.position += Vector3.right * speed * Time.deltaTime;
-
-        if (Input.GetKey(KeyCode.A))
-            this.transform.position -= Vector3.right * speed * Time.deltaTime;
-
-
-
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            //player.setCurrentLane(player.getCurrentLane() + 1);
             player.switchLaneLeft();
         }
 
-        if (Input.GetKey(KeyCode.E))
+        //if (Input.GetKey(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.D))
         {
-            //player.setCurrentLane(player.getCurrentLane() - 1);
             player.switchLaneRight();
-
         }
+
+        //if (Input.GetKey(KeyCode.W))
+        //    this.transform.position += Vector3.forward * speed * Time.deltaTime;
+
+        //if (Input.GetKey(KeyCode.S))
+        //    this.transform.position -= Vector3.forward * speed * Time.deltaTime;
+
+        //if (Input.GetKey(KeyCode.D))
+        //    this.transform.position += Vector3.right * speed * Time.deltaTime;
+
+        //if (Input.GetKey(KeyCode.A))
+        //    this.transform.position -= Vector3.right * speed * Time.deltaTime;
     }
 }

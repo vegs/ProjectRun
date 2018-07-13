@@ -53,7 +53,7 @@ GameObject:
   - component: {fileID: 23642252437334604}
   - component: {fileID: 64155701465749384}
   - component: {fileID: 114994972031605300}
-  - component: {fileID: 114795430285614508}
+  - component: {fileID: 114095692757074310}
   m_Layer: 0
   m_Name: straight_01
   m_TagString: Untagged
@@ -332,7 +332,7 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114795430285614508
+--- !u!114 &114095692757074310
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -340,7 +340,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1458785537105080}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08674f61bc8d30443ab2c9c6639407fe, type: 3}
+  m_Script: {fileID: 11500000, guid: c493799154ac6264ebdc0f6f746fbaec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lane_1:
@@ -355,7 +355,11 @@ MonoBehaviour:
   lane_4:
   - {fileID: 1893345060140240}
   - {fileID: 1573552939612048}
+  lane_5: []
+  lane_6: []
+  lane_7: []
   nextMapSection: {fileID: 0}
+  numberOfLanes: 4
 --- !u!114 &114994972031605300
 MonoBehaviour:
   m_ObjectHideFlags: 1

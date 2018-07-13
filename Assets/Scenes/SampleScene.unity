@@ -259,8 +259,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1779209724}
-  - component: {fileID: 1779209725}
   - component: {fileID: 1779209723}
+  - component: {fileID: 1779209725}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -304,9 +304,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1779209722}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c1b84a427010e0469ce0df07ab64dbc, type: 3}
+  m_Script: {fileID: 11500000, guid: 39dd6f5b4c8fc75478c863c863117455, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AutoConnect: 1
   player: {fileID: 114995341212509952, guid: 31f96ba0471e560408ada36b8171dfc9, type: 2}
-  Version: 
+  Version: 0.0.1

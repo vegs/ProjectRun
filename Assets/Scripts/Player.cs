@@ -5,8 +5,9 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
     private bool moving = false;
-    private int currentLane = 2;
+    public int currentLane = 0;
     public GameObject currentMapSection;
+    public MapSection mapSection;
     public List<GameObject> currentLaneWaypoints = new List<GameObject>();
     private MapGenerator mapGen;
 
@@ -14,7 +15,7 @@ public class Player : MonoBehaviour {
     public string characterName;
     private GameObject characterPrefab;
     public float speed = 2f;
-    public float switchLaneSpeed = 5f;
+    public float switchLaneSpeed = 15f;
 
     private GameObject nextWaypoint; // keeps track of which empty within the map-section for player to aim for
     private GameObject previousWaypoint; // keeps track of which empty within the map-section for player to aim for
@@ -39,15 +40,11 @@ public class Player : MonoBehaviour {
         {
             checkNewDirection();
         }
-
-
-
-
     }
 
     void checkNewDirection()
     {
-        setEmptyPair();
+        setWaypointPair();
 
         SetDirection();
 
@@ -72,19 +69,23 @@ public class Player : MonoBehaviour {
 
     public void moveTowardsTarget()
     {
-        //if (this.transform.position.x < targetPositionX)
-        //{
-        //    this.transform.position += Vector3.right * switchLaneSpeed * Time.deltaTime;
-        //}
-        //else if (this.transform.position.x > targetPositionX)
-        //{
-        //    this.transform.position += Vector3.left * switchLaneSpeed * Time.deltaTime;
-        //}
-        this.transform.position = new Vector3(targetPositionX, this.transform.position.y, this.transform.position.z);
+        float newPosX = this.transform.position.x;
+        if (this.transform.position.x < targetPositionX)
+        {
+            newPosX += switchLaneSpeed * Time.deltaTime;
+            newPosX = Mathf.Min(newPosX, targetPositionX);
+        }
+        else if (this.transform.position.x > targetPositionX)
+        {
+            //this.transform.position += Vector3.left * switchLaneSpeed * Time.deltaTime;
+            newPosX -= switchLaneSpeed * Time.deltaTime;
+            newPosX = Mathf.Max(newPosX, targetPositionX);
+        }
+        this.transform.position = new Vector3(newPosX, this.transform.position.y, this.transform.position.z);
 
     }
 
-    private void setEmptyPair()
+    private void setWaypointPair()
     {
         for (int i=1; i<currentLaneWaypoints.Count; i++) //the line the error is pointing to
         {
@@ -99,7 +100,7 @@ public class Player : MonoBehaviour {
 
 
         // player has ran past the last empty on map-section.
-        setCurrentMapSection(currentMapSection.GetComponent<MapSection_behaviour>().getNextMapSection());
+        setCurrentMapSection(mapSection.getNextMapSection());
     }
 
     public void StartPlayerMove ()
@@ -112,12 +113,13 @@ public class Player : MonoBehaviour {
 
     public void updateCurrentLaneWaypoints()
     {
-        currentLaneWaypoints = currentMapSection.GetComponent<MapSection_behaviour>().LaneEmpties(currentLane);
+        currentLaneWaypoints = mapSection.LaneWaypoints(currentLane);
     }
 
-    public void setCurrentMapSection(GameObject mapSection)
+    public void setCurrentMapSection(GameObject mapSectionGO)
     {
-        currentMapSection = mapSection;
+        currentMapSection = mapSectionGO;
+        mapSection = currentMapSection.GetComponent<MapSection>();
         updateCurrentLaneWaypoints();
         nextWaypoint = currentLaneWaypoints[1];;
         previousWaypoint = currentLaneWaypoints[0];
@@ -138,16 +140,18 @@ public class Player : MonoBehaviour {
 
     public void switchLaneRight()
     {
-        if (currentMapSection.GetComponent<MapSection_behaviour>().numberOfLanes > currentLane)
+        int nextLaneNo = currentLane + 1;
+        if (mapSection.checkValidLane(nextLaneNo) && mapSection.numberOfLanes > nextLaneNo)
         {
-            setCurrentLane(currentLane + 1);
+            setCurrentLane(nextLaneNo);
         }
     }
     public void switchLaneLeft()
     {
-        if (currentMapSection.GetComponent<MapSection_behaviour>().numberOfLanes > currentLane)
+        int nextLaneNo = currentLane - 1;
+        if (nextLaneNo>-1)
         {
-            setCurrentLane(currentLane - 1);
+            setCurrentLane(nextLaneNo);
         }
     }
 

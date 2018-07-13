@@ -1,76 +1,74 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NetworkManager : MonoBehaviour {
-	public GameObject standbyCamera;
-	//SpawnSpot[] spawnSpots;
-	public GameObject mainCamera;
-	// Use this for initialization
-	public bool offlineMode = false;
+public class NetworkManager : Photon.MonoBehaviour
+{
+    /// <summary>Connect automatically? If false you can set this to true later on or call ConnectUsingSettings in your own scripts.</summary>
+    public bool AutoConnect = true;
+    public Player player;
+    public string Version = "0.0.1";
 
-	public float respawnTimer = 0;
-
-	void Start () {
-		//spawnSpots= GameObject.FindObjectsOfType<SpawnSpot>();
-		Connect ();
-	}
-
-	void Connect(){
-		if ( offlineMode ){
-			//PhotonNetwork.offlineMode = true;
-			OnJoinedLobby();
-		}else{
-			PhotonNetwork.ConnectUsingSettings ( "ConjureMaster v001" );
-		}
-	}
-
-	void OnGUI(){
-		//GUILayout.Label ( PhotonNetwork.connectionStateDetailed.ToString() );
-	}
-
-	void OnJoinedLobby(){
-		Debug.Log ( "OnJoinedLobby" );
-		//PhotonNetwork.JoinRandomRoom ();
-	}
-
-	void OnPhotonRandomJoinFailed(){
-		Debug.Log ( "OnPhotonRandomLobbyFailed" );
-		//PhotonNetwork.CreateRoom ( null );
-	}
-
-	void OnJoinedRoom(){
-		SpawnMyPlayer ();
-	}
-
-	void SpawnMyPlayer(){
-		//SpawnSpot mySpawnSpot = spawnSpots[Random.Range(0,spawnSpots.Length)];
-		//GameObject myPlayerGO = (GameObject) PhotonNetwork.Instantiate ("Player", mySpawnSpot.transform.position, mySpawnSpot.transform.rotation, 0);
-
-		standbyCamera.SetActive(false);
-
-		//myPlayerGO.GetComponent<OLD_PlayerMovement> ().enabled = true;
-		//myPlayerGO.GetComponent<PlayerMovement> ().enabled = true;
-		//myPlayerGO.GetComponent<Jump> ().enabled = true;
-		//myPlayerGO.GetComponent<MouseLook> ().enabled = true;
-		//myPlayerGO.GetComponent<PlayerCombat> ().enabled = true;
+    /// <summary>if we don't want to connect in Start(), we have to "remember" if we called ConnectUsingSettings()</summary>
+    private bool ConnectInUpdate = true;
 
 
-		//mainCamera.GetComponent<LookAtCamera> ().body = (GameObject)myPlayerGO;
-		//mainCamera.GetComponent<LookAtCamera> ().head = myPlayerGO.transform.FindChild ("Head").gameObject;
-		mainCamera.SetActive(true);
+    public virtual void Start()
+    {
+        PhotonNetwork.autoJoinLobby = false;    // we join randomly. always. no need to join a lobby to get the list of rooms.
+    }
 
-	}
+    public virtual void Update()
+    {
+        if (ConnectInUpdate && AutoConnect && !PhotonNetwork.connected)
+        {
+            Debug.Log("Update() was called by Unity. Scene is loaded. Let's connect to the Photon Master Server. Calling: PhotonNetwork.ConnectUsingSettings();");
 
-	void Update() {
-		if(respawnTimer > 0) {
-			respawnTimer -= Time.deltaTime;
-			
-			if(respawnTimer <= 0) {
-				// Time to respawn the player!
-				SpawnMyPlayer();
-			}
-		}
-	}
+            ConnectInUpdate = false;
+            PhotonNetwork.ConnectUsingSettings(Version);
+        }
+    }
 
 
+    // below, we implement some callbacks of PUN
+    // you can find PUN's callbacks in the class PunBehaviour or in enum PhotonNetworkingMessage
+
+
+    public virtual void OnConnectedToMaster()
+    {
+        Debug.Log("OnConnectedToMaster() was called by PUN. Now this client is connected and could join a room. Calling: PhotonNetwork.JoinRandomRoom();");
+        PhotonNetwork.JoinRandomRoom();
+    }
+
+    public virtual void OnJoinedLobby()
+    {
+        Debug.Log("OnJoinedLobby(). This client is connected and does get a room-list, which gets stored as PhotonNetwork.GetRoomList(). This script now calls: PhotonNetwork.JoinRandomRoom();");
+        PhotonNetwork.JoinRandomRoom();
+    }
+
+    public virtual void OnPhotonRandomJoinFailed()
+    {
+        Debug.Log("OnPhotonRandomJoinFailed() was called by PUN. No random room available, so we create one. Calling: PhotonNetwork.CreateRoom(null, new RoomOptions() {maxPlayers = 4}, null);");
+        PhotonNetwork.CreateRoom(null, new RoomOptions() { MaxPlayers = 4 }, null);
+    }
+
+    // the following methods are implemented to give you some context. re-implement them as needed.
+
+    public virtual void OnFailedToConnectToPhoton(DisconnectCause cause)
+    {
+        Debug.LogError("Cause: " + cause);
+    }
+
+    public void OnJoinedRoom()
+    {
+        //player.Spawn();
+        GameObject playerInstance = PhotonNetwork.Instantiate(player.gameObject.name, new Vector3(0, 0.5f, -3f), Quaternion.identity, 0) as GameObject;
+        Player playerInstanceComp = playerInstance.GetComponent<Player>();
+        //MapGenerator mapGen = GetComponent<MapGenerator>();
+
+        //playerInstanceComp.setCurrentMapSection(mapGen.getFirstSection());
+
+        //playerInstanceComp.StartPlayerMove();
+
+        Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room. From here on, your game would be running. For reference, all callbacks are listed in enum: PhotonNetworkingMessage");
+    }
 }

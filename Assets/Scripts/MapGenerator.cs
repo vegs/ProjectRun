@@ -53,7 +53,7 @@ public class MapGenerator : Photon.MonoBehaviour {
         //activeMapSections.Add(Instantiate(mapSection, new Vector3(lastSection.transform.position.x, lastSection.transform.position.y, lastSection.transform.position.z+5f), Quaternion.identity));
         GameObject a = (GameObject)Instantiate(mapSection, new Vector3(lastSection.transform.position.x, lastSection.transform.position.y, lastSection.transform.position.z + 5f), Quaternion.identity);
 
-        lastSection.GetComponent<MapSection_behaviour>().setNextMapSection(a);
+        lastSection.GetComponent<MapSection>().setNextMapSection(a);
 
         activeMapSections.Add(a);
         Debug.Log(activeMapSections);
