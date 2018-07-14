@@ -6,6 +6,7 @@ public class NetworkManager : Photon.MonoBehaviour
     /// <summary>Connect automatically? If false you can set this to true later on or call ConnectUsingSettings in your own scripts.</summary>
     public bool AutoConnect = true;
     public Player player;
+    private Player myPlayer;
     public string Version = "0.0.1";
 
     /// <summary>if we don't want to connect in Start(), we have to "remember" if we called ConnectUsingSettings()</summary>
@@ -25,6 +26,12 @@ public class NetworkManager : Photon.MonoBehaviour
 
             ConnectInUpdate = false;
             PhotonNetwork.ConnectUsingSettings(Version);
+        }
+
+
+        if (PhotonNetwork.inRoom && PhotonNetwork.playerList.Length == 1)
+        {
+            StartGame();
         }
     }
 
@@ -62,7 +69,7 @@ public class NetworkManager : Photon.MonoBehaviour
     {
         //player.Spawn();
         GameObject playerInstance = PhotonNetwork.Instantiate(player.gameObject.name, new Vector3(0, 0.5f, -3f), Quaternion.identity, 0) as GameObject;
-        Player playerInstanceComp = playerInstance.GetComponent<Player>();
+        myPlayer = playerInstance.GetComponent<Player>();
         //MapGenerator mapGen = GetComponent<MapGenerator>();
 
         //playerInstanceComp.setCurrentMapSection(mapGen.getFirstSection());
@@ -70,5 +77,10 @@ public class NetworkManager : Photon.MonoBehaviour
         //playerInstanceComp.StartPlayerMove();
 
         Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room. From here on, your game would be running. For reference, all callbacks are listed in enum: PhotonNetworkingMessage");
+    }
+
+    private void StartGame()
+    {
+        myPlayer.StartPlayerMove();
     }
 }

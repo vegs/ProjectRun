@@ -6,16 +6,14 @@ public class test_PlayerBehaviour : MonoBehaviour {
 
     public float speed = 1f;
     private Player player;
-    private PhotonView photonView;
 
     void Start()
     {
         player = this.GetComponent<Player>();
-        photonView = this.GetComponent<PhotonView>();
     }
     void Update()
     {
-        if(photonView.isMine){
+        if(player.photonView.isMine){
             InputMovement();
         }
     }

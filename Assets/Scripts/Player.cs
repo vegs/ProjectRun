@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class Player : Photon.MonoBehaviour {
 
     private bool moving = false;
     public int currentLane = 0;
+    public int previousLane = 0;
     public GameObject currentMapSection;
     public MapSection mapSection;
     public List<GameObject> currentLaneWaypoints = new List<GameObject>();
@@ -23,6 +24,10 @@ public class Player : MonoBehaviour {
     public Vector3 mapDirection;
     public float targetPositionX;
 
+    double switchedLaneMillis = -1;
+
+    
+
     void Start()
     {
         setCharacter(this.gameObject);
@@ -31,7 +36,9 @@ public class Player : MonoBehaviour {
 
         setCurrentMapSection(mapGen.getFirstSection());
 
-        StartPlayerMove();
+        //StartPlayerMove();
+
+
     }
 
     void Update()
@@ -131,19 +138,12 @@ public class Player : MonoBehaviour {
         return currentMapSection;
     }
 
-    public void setCurrentLane(int lane)
-    {
-        currentLane = lane;
-        updateCurrentLaneWaypoints();
-
-    }
-
     public void switchLaneRight()
     {
         int nextLaneNo = currentLane + 1;
         if (mapSection.checkValidLane(nextLaneNo) && mapSection.numberOfLanes > nextLaneNo)
         {
-            setCurrentLane(nextLaneNo);
+            SwitchToLane(nextLaneNo, System.DateTime.Now.Millisecond);
         }
     }
     public void switchLaneLeft()
@@ -151,8 +151,13 @@ public class Player : MonoBehaviour {
         int nextLaneNo = currentLane - 1;
         if (nextLaneNo>-1)
         {
-            setCurrentLane(nextLaneNo);
+            SwitchToLane(nextLaneNo, System.DateTime.Now.Millisecond);
         }
+    }
+
+    public void revertLaneSwitch()
+    {
+        SwitchToLane(previousLane, System.DateTime.Now.Millisecond);
     }
 
     public int getCurrentLane()
@@ -169,5 +174,46 @@ public class Player : MonoBehaviour {
     public GameObject getPrefab()
     {
         return characterPrefab;
+    }
+
+    void SwitchToLane(int lane, double timestamp)
+    {
+        this.photonView.RPC("setCurrentLane", PhotonTargets.All, lane, timestamp);
+    }
+
+    [PunRPC]
+    void setCurrentLane(int lane, double timestamp)
+    {
+        double now = System.DateTime.Now.Millisecond;
+        if (checkIfLaneIsEmpty(lane, timestamp))
+        {
+            previousLane = currentLane;
+            currentLane = lane;
+            updateCurrentLaneWaypoints();
+        }
+    }
+
+    bool checkIfLaneIsEmpty(int laneNo, double timestamp)
+    {
+        GameObject[] playerGOs = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (GameObject playerGO in playerGOs)
+        {
+            Player player = playerGO.GetComponent<Player>();
+            bool isClose = !player.photonView.isMine && (this.transform.position.z < (playerGO.transform.position.z + 2)) && (this.transform.position.z > (playerGO.transform.position.z - 2));
+            if (player.getCurrentLane() == laneNo && isClose)
+            {
+                if(player.switchedLaneMillis < timestamp)
+                {
+                    return false;
+                }
+                else
+                {
+                    player.revertLaneSwitch();
+                }
+                
+            }
+        }
+        return true;
     }
 }
