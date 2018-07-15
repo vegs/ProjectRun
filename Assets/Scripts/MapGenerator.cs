@@ -9,7 +9,8 @@ public class MapGenerator : Photon.MonoBehaviour {
     public int nCurrentSections = 5;
     public List<GameObject> activeMapSections = new List<GameObject>();
     private bool initiated = false;
-    private List<GameObject> mapOrder= new List<GameObject>();
+    private List<GameObject> mapOrder = new List<GameObject>();
+    private GameObject[] players;
 
     // Use this for initialization
     void Awake () {
@@ -20,23 +21,37 @@ public class MapGenerator : Photon.MonoBehaviour {
 	void Update () {
         GameObject firstSection = (GameObject)activeMapSections[0];
 
-        if (initiated && firstSection && firstSection.transform.position.z < -5f)
+        bool generateNew = false;
+        if(initiated && firstSection && players != null)
+        {
+            foreach (GameObject player in players)
+            {
+                if(player.transform.position.z > activeMapSections[activeMapSections.Count - 5].transform.position.z)
+                {
+                    generateNew = true;
+                }
+            }
+        }
+        if (generateNew)
         {
             addSection();
-            removeFirstSection();
         }
-        else
-        {
 
-        }
+        //if (initiated && firstSection && firstSection.transform.position.z < -5f)
+        //{
+        //    addSection();
+        //    removeFirstSection();
+        //}
+        //else
+        //{
+
+        //}
     }
 
 
     void initiateMap(){
         GameObject a = (GameObject)Instantiate(mapSection, new Vector3(0, 0, 0), Quaternion.identity);
         activeMapSections.Add(a);
-
-        
 
         for (int i=0; i<nCurrentSections; i++)
         {
@@ -79,6 +94,11 @@ public class MapGenerator : Photon.MonoBehaviour {
         }
 
        
+    }
+
+    public void WatchPlayers(GameObject[] players)
+    {
+        this.players = players;
     }
 
 

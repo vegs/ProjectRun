@@ -69,6 +69,7 @@ public class NetworkManager : Photon.MonoBehaviour
     {
         //player.Spawn();
         GameObject playerInstance = PhotonNetwork.Instantiate(player.gameObject.name, new Vector3(0, 0.5f, -3f), Quaternion.identity, 0) as GameObject;
+        //GameObject playerInstance2 = PhotonNetwork.Instantiate(player.gameObject.name, new Vector3(0, 0.5f, -3f), Quaternion.identity, 0) as GameObject;
         myPlayer = playerInstance.GetComponent<Player>();
         //MapGenerator mapGen = GetComponent<MapGenerator>();
 
@@ -82,5 +83,6 @@ public class NetworkManager : Photon.MonoBehaviour
     private void StartGame()
     {
         myPlayer.StartPlayerMove();
+        GameObject.FindGameObjectWithTag("Scripts").GetComponent<MapGenerator>().WatchPlayers(GameObject.FindGameObjectsWithTag("Player"));
     }
 }

@@ -28,7 +28,7 @@ public class MapSection : MonoBehaviour
         lanes.Add(lane_7);
     }
 
-    public List<GameObject> LaneWaypoints(int laneNo)
+    public List<GameObject> LaneCheckpoints(int laneNo)
     {
         return lanes[laneNo];
     }

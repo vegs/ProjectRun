@@ -43,4 +43,5 @@ MonoBehaviour:
   - RequestForPickupTimes
   - TaggedPlayer
   - setCurrentLane
+  - setCurrentLane2
   DisableAutoOpenWizard: 1

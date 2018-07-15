@@ -9,17 +9,17 @@ public class Player : Photon.MonoBehaviour {
     public int previousLane = 0;
     public GameObject currentMapSection;
     public MapSection mapSection;
-    public List<GameObject> currentLaneWaypoints = new List<GameObject>();
+    public List<GameObject> currentLaneCheckpoints = new List<GameObject>();
     private MapGenerator mapGen;
 
     public int id;
     public string characterName;
     private GameObject characterPrefab;
-    public float speed = 2f;
+    public float speed = 10f;
     public float switchLaneSpeed = 15f;
 
-    private GameObject nextWaypoint; // keeps track of which empty within the map-section for player to aim for
-    private GameObject previousWaypoint; // keeps track of which empty within the map-section for player to aim for
+    private GameObject nextCheckpoint; // keeps track of which empty within the map-section for player to aim for
+    private GameObject previousCheckpoint; // keeps track of which empty within the map-section for player to aim for
 
     public Vector3 mapDirection;
     public float targetPositionX;
@@ -46,32 +46,38 @@ public class Player : Photon.MonoBehaviour {
         if (moving)
         {
             checkNewDirection();
+            moveForwards();
+            moveTowardsTarget();
         }
     }
 
     void checkNewDirection()
     {
-        setWaypointPair();
+        setCheckpointPair();
 
         SetDirection();
 
-        SetTargetPosition();
-
-        moveTowardsTarget();
+        SetTargetPosition();        
     }
 
     public void SetDirection()
     {
-        mapDirection = (nextWaypoint.transform.position - previousWaypoint.transform.position).normalized;
+        mapDirection = (nextCheckpoint.transform.position - previousCheckpoint.transform.position).normalized;
+        this.transform.localEulerAngles = mapDirection;
     }
 
     public void SetTargetPosition()
     {
         Vector2 dirXZ = new Vector2(mapDirection.x, mapDirection.z);
 
-        //targetPositionX = ((this.transform.position.z - previousWaypoint.transform.position.z) / (Vector2.Dot(Vector2.right,dirXZ))) + previousWaypoint.transform.position.x;
-        targetPositionX = nextWaypoint.transform.position.x;
+        //targetPositionX = ((this.transform.position.z - previousCheckpoint.transform.position.z) / (Vector2.Dot(Vector2.right,dirXZ))) + previousCheckpoint.transform.position.x;
+        targetPositionX = nextCheckpoint.transform.position.x;
 
+    }
+
+    void moveForwards()
+    {
+        transform.position += transform.forward * Time.deltaTime * speed;
     }
 
     public void moveTowardsTarget()
@@ -92,15 +98,15 @@ public class Player : Photon.MonoBehaviour {
 
     }
 
-    private void setWaypointPair()
+    private void setCheckpointPair()
     {
-        for (int i=1; i<currentLaneWaypoints.Count; i++) //the line the error is pointing to
+        for (int i=1; i<currentLaneCheckpoints.Count; i++) //the line the error is pointing to
         {
-            GameObject waypoint = currentLaneWaypoints[i];
-            if (this.transform.position.z < waypoint.transform.position.z)
+            GameObject checkpoint = currentLaneCheckpoints[i];
+            if (this.transform.position.z < checkpoint.transform.position.z)
             {
-                nextWaypoint = waypoint;
-                previousWaypoint = currentLaneWaypoints[i-1];
+                nextCheckpoint = checkpoint;
+                previousCheckpoint = currentLaneCheckpoints[i-1];
                 return;
             }
         }
@@ -112,24 +118,24 @@ public class Player : Photon.MonoBehaviour {
 
     public void StartPlayerMove ()
     {
-        updateCurrentLaneWaypoints();
+        updateCurrentLaneCheckpoints();
         moving = true;
 
     }
 
 
-    public void updateCurrentLaneWaypoints()
+    public void updateCurrentLaneCheckpoints()
     {
-        currentLaneWaypoints = mapSection.LaneWaypoints(currentLane);
+        currentLaneCheckpoints = mapSection.LaneCheckpoints(currentLane);
     }
 
     public void setCurrentMapSection(GameObject mapSectionGO)
     {
         currentMapSection = mapSectionGO;
         mapSection = currentMapSection.GetComponent<MapSection>();
-        updateCurrentLaneWaypoints();
-        nextWaypoint = currentLaneWaypoints[1];;
-        previousWaypoint = currentLaneWaypoints[0];
+        updateCurrentLaneCheckpoints();
+        nextCheckpoint = currentLaneCheckpoints[1];;
+        previousCheckpoint = currentLaneCheckpoints[0];
 
     }
 
@@ -178,7 +184,11 @@ public class Player : Photon.MonoBehaviour {
 
     void SwitchToLane(int lane, double timestamp)
     {
-        this.photonView.RPC("setCurrentLane", PhotonTargets.All, lane, timestamp);
+        if (moving)
+        {
+            this.photonView.RPC("setCurrentLane", PhotonTargets.All, lane, timestamp);
+
+        }
     }
 
     [PunRPC]
@@ -189,7 +199,8 @@ public class Player : Photon.MonoBehaviour {
         {
             previousLane = currentLane;
             currentLane = lane;
-            updateCurrentLaneWaypoints();
+            switchedLaneMillis = timestamp;
+            updateCurrentLaneCheckpoints();
         }
     }
 
@@ -200,7 +211,7 @@ public class Player : Photon.MonoBehaviour {
         foreach (GameObject playerGO in playerGOs)
         {
             Player player = playerGO.GetComponent<Player>();
-            bool isClose = !player.photonView.isMine && (this.transform.position.z < (playerGO.transform.position.z + 2)) && (this.transform.position.z > (playerGO.transform.position.z - 2));
+            bool isClose = (this.transform.position.z < (playerGO.transform.position.z + 2)) && (this.transform.position.z > (playerGO.transform.position.z - 2));
             if (player.getCurrentLane() == laneNo && isClose)
             {
                 if(player.switchedLaneMillis < timestamp)

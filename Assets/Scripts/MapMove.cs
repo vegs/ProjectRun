@@ -12,6 +12,6 @@ public class MapMove : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        this.transform.position -= Vector3.forward * speed * Time.deltaTime;
+        //this.transform.position -= Vector3.forward * speed * Time.deltaTime;
     }
 }
