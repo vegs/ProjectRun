@@ -8,6 +8,8 @@ public class NetworkManager : Photon.MonoBehaviour
     public Player player;
     private Player myPlayer;
     public string Version = "0.0.1";
+    public int numberOfPlayers = 1;
+    bool gameStarted = false;
 
     /// <summary>if we don't want to connect in Start(), we have to "remember" if we called ConnectUsingSettings()</summary>
     private bool ConnectInUpdate = true;
@@ -28,10 +30,23 @@ public class NetworkManager : Photon.MonoBehaviour
             PhotonNetwork.ConnectUsingSettings(Version);
         }
 
-
-        if (PhotonNetwork.inRoom && PhotonNetwork.playerList.Length == 1)
+        if (!gameStarted)
         {
-            StartGame();
+            checkStart();
+        }
+
+  
+    }
+
+    void checkStart()
+    {
+        if (PhotonNetwork.inRoom && PhotonNetwork.playerList.Length == numberOfPlayers)
+        {
+            
+            if(GameObject.FindGameObjectsWithTag("Player").Length == numberOfPlayers) {
+                StartGame();
+            
+            }
         }
     }
 
@@ -76,12 +91,15 @@ public class NetworkManager : Photon.MonoBehaviour
         //playerInstanceComp.setCurrentMapSection(mapGen.getFirstSection());
 
         //playerInstanceComp.StartPlayerMove();
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().enabled = false;
+        playerInstance.GetComponentInChildren<Camera>().enabled = true;
 
         Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room. From here on, your game would be running. For reference, all callbacks are listed in enum: PhotonNetworkingMessage");
     }
 
     private void StartGame()
     {
+        gameStarted = true;
         myPlayer.StartPlayerMove();
         GameObject.FindGameObjectWithTag("Scripts").GetComponent<MapGenerator>().WatchPlayers(GameObject.FindGameObjectsWithTag("Player"));
     }
