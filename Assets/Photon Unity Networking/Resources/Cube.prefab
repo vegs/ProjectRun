@@ -28,7 +28,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1627748746661210
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,6 +224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32d2a1d09a681e04eafc4b8455e7b961, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moving: 0
   currentLane: 0
   previousLane: 0
   currentMapSection: {fileID: 0}
@@ -235,6 +236,7 @@ MonoBehaviour:
   switchLaneSpeed: 13
   mapDirection: {x: 0, y: 0, z: 0}
   targetPositionX: 0
+  targetPositionZ: 0
 --- !u!124 &124979029931087690
 Behaviour:
   m_ObjectHideFlags: 1

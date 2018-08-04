@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : Photon.MonoBehaviour {
 
-    private bool moving = false;
+    public bool moving = false;
     public int currentLane = 0;
     public int previousLane = 0;
     public GameObject currentMapSection;
@@ -22,11 +22,11 @@ public class Player : Photon.MonoBehaviour {
     private GameObject previousCheckpoint; // keeps track of which empty within the map-section for player to aim for
 
     public Vector3 mapDirection;
+    private Vector3 checkPointsDistance;
     public float targetPositionX;
+    public float targetPositionZ;
 
     double switchedLaneMillis = -1;
-
-    
 
     void Start()
     {
@@ -37,7 +37,6 @@ public class Player : Photon.MonoBehaviour {
         setCurrentMapSection(mapGen.getFirstSection());
 
         //StartPlayerMove();
-
 
     }
 
@@ -60,24 +59,12 @@ public class Player : Photon.MonoBehaviour {
         SetTargetPosition();        
     }
 
-    public void SetDirection()
-    {
-        mapDirection = (nextCheckpoint.transform.position - previousCheckpoint.transform.position).normalized;
-        this.transform.localEulerAngles = mapDirection;
-    }
 
-    public void SetTargetPosition()
-    {
-        Vector2 dirXZ = new Vector2(mapDirection.x, mapDirection.z);
-
-        //targetPositionX = ((this.transform.position.z - previousCheckpoint.transform.position.z) / (Vector2.Dot(Vector2.right,dirXZ))) + previousCheckpoint.transform.position.x;
-        targetPositionX = nextCheckpoint.transform.position.x;
-
-    }
 
     void moveForwards()
     {
-        transform.position += transform.forward * Time.deltaTime * speed;
+        // All players shall move at the same speed forwards at all times
+        transform.position += Vector3.forward * Time.deltaTime * speed;
     }
 
     public void moveTowardsTarget()
@@ -111,9 +98,29 @@ public class Player : Photon.MonoBehaviour {
             }
         }
 
-
         // player has ran past the last empty on map-section.
         setCurrentMapSection(mapSection.getNextMapSection());
+    }
+
+    public void SetDirection()
+    {
+        // make the player look at the next empty
+        checkPointsDistance = (nextCheckpoint.transform.position - previousCheckpoint.transform.position);
+        mapDirection = checkPointsDistance.normalized;
+        this.transform.LookAt(this.transform.position + mapDirection);
+        Debug.DrawRay(this.transform.position, mapDirection*5, Color.red);
+    }
+
+    public void SetTargetPosition()
+    {
+
+        Vector3 targetPositionXZ = previousCheckpoint.transform.position
+                        + checkPointsDistance
+                        * ((this.transform.position.z-previousCheckpoint.transform.position.z)/checkPointsDistance.z);
+
+        targetPositionX = targetPositionXZ.x;
+        targetPositionZ = targetPositionXZ.z;
+
     }
 
     public void StartPlayerMove ()
@@ -222,7 +229,6 @@ public class Player : Photon.MonoBehaviour {
                 {
                     player.revertLaneSwitch();
                 }
-                
             }
         }
         return true;

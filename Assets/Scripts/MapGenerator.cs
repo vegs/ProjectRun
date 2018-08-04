@@ -16,7 +16,7 @@ public class MapGenerator : Photon.MonoBehaviour {
     void Awake () {
         initiateMap();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
         GameObject firstSection = (GameObject)activeMapSections[0];
@@ -24,11 +24,14 @@ public class MapGenerator : Photon.MonoBehaviour {
         bool generateNew = false;
         if(initiated && firstSection && players != null)
         {
-            foreach (GameObject player in players)
+            if(players.Length > 0)
             {
-                if(player.transform.position.z > activeMapSections[activeMapSections.Count - 5].transform.position.z)
+                foreach (GameObject player in players)
                 {
-                    generateNew = true;
+                    if(player.transform.position.z > activeMapSections[activeMapSections.Count - 5].transform.position.z)
+                    {
+                        generateNew = true;
+                    }
                 }
             }
         }
@@ -66,7 +69,7 @@ public class MapGenerator : Photon.MonoBehaviour {
         //GameObject firstSection = (GameObject)activeMapSections[0];
         GameObject lastSection = activeMapSections[activeMapSections.Count-1];
         //activeMapSections.Add(Instantiate(mapSection, new Vector3(lastSection.transform.position.x, lastSection.transform.position.y, lastSection.transform.position.z+5f), Quaternion.identity));
-        GameObject a = (GameObject)Instantiate(mapSection, new Vector3(lastSection.transform.position.x, lastSection.transform.position.y, lastSection.transform.position.z + 5f), Quaternion.identity);
+        GameObject a = (GameObject)Instantiate(mapSection, new Vector3(lastSection.transform.position.x, lastSection.transform.position.y, lastSection.transform.position.z + 10f), Quaternion.identity);
 
         lastSection.GetComponent<MapSection>().setNextMapSection(a);
 

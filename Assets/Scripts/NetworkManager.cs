@@ -42,10 +42,8 @@ public class NetworkManager : Photon.MonoBehaviour
     {
         if (PhotonNetwork.inRoom && PhotonNetwork.playerList.Length == numberOfPlayers)
         {
-            
             if(GameObject.FindGameObjectsWithTag("Player").Length == numberOfPlayers) {
                 StartGame();
-            
             }
         }
     }
@@ -91,8 +89,11 @@ public class NetworkManager : Photon.MonoBehaviour
         //playerInstanceComp.setCurrentMapSection(mapGen.getFirstSection());
 
         //playerInstanceComp.StartPlayerMove();
-        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().enabled = false;
-        playerInstance.GetComponentInChildren<Camera>().enabled = true;
+
+        // Old camera commands
+        //GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().enabled = false;
+        //playerInstance.GetComponentInChildren<Camera>().enabled = true;
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<SimpleCamera>().body = playerInstance;
 
         Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room. From here on, your game would be running. For reference, all callbacks are listed in enum: PhotonNetworkingMessage");
     }
